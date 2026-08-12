@@ -73,21 +73,40 @@
         }
 
 
-        function chooseAnswer(answer) {
+let legalScore = 0;
+let ethicsScore = 0;
+let patientScore = 0;
 
-            if (answer === "B") {
 
-                document.getElementById("result").innerHTML =
-                    "Correct! This decision respects patient autonomy and informed decision-making.";
+function chooseAnswer(answer) {
 
-            } else {
+    if (answer === "B") {
 
-                document.getElementById("result").innerHTML =
-                    "Not quite. Think about the patient's right to make informed decisions about their own care.";
+        legalScore += 10;
+        ethicsScore += 10;
+        patientScore += 10;
 
-            }
+        document.getElementById("result").innerHTML =
+            "Your decision respects patient autonomy and informed decision-making.<br><br>" +
+            "⚖️ Legal: +10<br>" +
+            "🧠 Ethics: +10<br>" +
+            "❤️ Patient Care: +10";
 
-        }
+    } else {
+
+        legalScore += 3;
+        ethicsScore += 2;
+        patientScore += 1;
+
+        document.getElementById("result").innerHTML =
+            "This decision raises concerns about patient autonomy.<br><br>" +
+            "⚖️ Legal: +3<br>" +
+            "🧠 Ethics: +2<br>" +
+            "❤️ Patient Care: +1";
+
+    }
+
+}
 
     </script>
 
