@@ -6,18 +6,89 @@
 
 <body>
 
-    <h1>MEDLAW</h1>
+    <div id="home">
+        <h1>MEDLAW</h1>
+        <h2>Medical Law & Ethics</h2>
+        <p>Learn. Decide. Understand.</p>
 
-    <h2>Medical Law & Ethics</h2>
+        <button onclick="startGame()">START</button>
+    </div>
 
-    <p>Learn. Decide. Understand.</p>
 
-    <button onclick="startGame()">START</button>
+    <div id="game" style="display: none;">
+
+        <h1>CASE 001</h1>
+
+        <h2>Patient Autonomy</h2>
+
+        <p>
+            You are working with a patient who has been diagnosed
+            with a serious medical condition. Their doctor recommends
+            a treatment that has a high chance of helping.
+        </p>
+
+        <p>
+            The patient understands the risks and benefits but
+            refuses the treatment.
+        </p>
+
+        <h3>What should happen?</h3>
+
+        <button onclick="chooseAnswer('A')">
+            A. Proceed with the treatment anyway.
+        </button>
+
+        <br><br>
+
+        <button onclick="chooseAnswer('B')">
+            B. Respect the patient's decision after confirming
+            they understand the risks and benefits.
+        </button>
+
+        <br><br>
+
+        <button onclick="chooseAnswer('C')">
+            C. Ask the patient's family to make the decision.
+        </button>
+
+        <br><br>
+
+        <button onclick="chooseAnswer('D')">
+            D. Delay the decision until the patient agrees.
+        </button>
+
+        <p id="result"></p>
+
+    </div>
+
 
     <script>
+
         function startGame() {
-            alert("Welcome to MEDLAW!");
+
+            document.getElementById("home").style.display = "none";
+
+            document.getElementById("game").style.display = "block";
+
         }
+
+
+        function chooseAnswer(answer) {
+
+            if (answer === "B") {
+
+                document.getElementById("result").innerHTML =
+                    "Correct! This decision respects patient autonomy and informed decision-making.";
+
+            } else {
+
+                document.getElementById("result").innerHTML =
+                    "Not quite. Think about the patient's right to make informed decisions about their own care.";
+
+            }
+
+        }
+
     </script>
 
 </body>
