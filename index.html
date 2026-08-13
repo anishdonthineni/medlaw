@@ -16,6 +16,11 @@
 
 
     <div id="game" style="display: none;">
+        <div id="score">
+    <p>⚖️ Legal: <span id="legalScore">0</span></p>
+    <p>🧠 Ethics: <span id="ethicsScore">0</span></p>
+    <p>❤️ Patient Care: <span id="patientScore">0</span></p>
+</div>
 
         <h1>CASE 001</h1>
 
@@ -105,7 +110,9 @@ function chooseAnswer(answer) {
             "Patient Care: +1";
 
     }
-
+document.getElementById("legalScore").innerHTML = legalScore;
+document.getElementById("ethicsScore").innerHTML = ethicsScore;
+document.getElementById("patientScore").innerHTML = patientScore;
 }
 
     </script>
