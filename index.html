@@ -62,8 +62,11 @@
             D. Delay the decision until the patient agrees.
         </button>
 
-        <p id="result"></p>
+<div id="result"></div>
 
+<button id="nextButton" onclick="nextQuestion()" style="display: none;">
+    NEXT
+</button>
     </div>
 
 
@@ -92,10 +95,11 @@ function chooseAnswer(answer) {
         patientScore += 10;
 
         document.getElementById("result").innerHTML =
-            "Your decision respects patient autonomy and informed decision-making.<br><br>" +
-            "⚖️ Legal: +10<br>" +
-            "🧠 Ethics: +10<br>" +
-            "❤️ Patient Care: +10";
+            "<h3>Good decision.</h3>" +
+            "<p>You respected the patient's autonomy and their right to make an informed decision.</p>" +
+            "<p>⚖️ Legal: +10</p>" +
+            "<p>🧠 Ethics: +10</p>" +
+            "<p>❤️ Patient Care: +10</p>";
 
     } else {
 
@@ -104,15 +108,66 @@ function chooseAnswer(answer) {
         patientScore += 1;
 
         document.getElementById("result").innerHTML =
-            "This decision raises concerns about patient autonomy.<br><br>" +
-            "Legal: +3<br>" +
-            "Ethics: +2<br>" +
-            "Patient Care: +1";
-
+            "<h3>Think about this decision.</h3>" +
+            "<p>This choice raises concerns about the patient's autonomy.</p>" +
+            "<p>⚖️ Legal: +3</p>" +
+            "<p>🧠 Ethics: +2</p>" +
+            "<p>❤️ Patient Care: +1</p>";
     }
-document.getElementById("legalScore").innerHTML = legalScore;
-document.getElementById("ethicsScore").innerHTML = ethicsScore;
-document.getElementById("patientScore").innerHTML = patientScore;
+
+    document.getElementById("legalScore").innerHTML = legalScore;
+    document.getElementById("ethicsScore").innerHTML = ethicsScore;
+    document.getElementById("patientScore").innerHTML = patientScore;
+
+    document.getElementById("nextButton").style.display = "block";
+}
+        function nextQuestion() {
+
+    document.getElementById("result").innerHTML =
+        "<h2>Decision 2</h2>" +
+        "<p>A family member approaches you and asks for information about the patient's condition.</p>" +
+        "<h3>What should you do?</h3>" +
+
+        "<button onclick=\"chooseSecondAnswer('A')\">" +
+        "A. Give them all the information they request." +
+        "</button><br><br>" +
+
+        "<button onclick=\"chooseSecondAnswer('B')\">" +
+        "B. Consider whether the patient has authorized sharing their information." +
+        "</button><br><br>" +
+
+        "<button onclick=\"chooseSecondAnswer('C')\">" +
+        "C. Tell them everything because they are family." +
+        "</button>";
+
+    document.getElementById("nextButton").style.display = "none";
+}
+        function chooseSecondAnswer(answer) {
+
+    if (answer === "B") {
+
+        legalScore += 10;
+        ethicsScore += 10;
+        patientScore += 10;
+
+        document.getElementById("result").innerHTML =
+            "<h3>Good decision.</h3>" +
+            "<p>Patient confidentiality is an important part of healthcare.</p>";
+
+    } else {
+
+        legalScore += 2;
+        ethicsScore += 2;
+        patientScore += 1;
+
+        document.getElementById("result").innerHTML =
+            "<h3>Consider confidentiality.</h3>" +
+            "<p>Being a family member does not automatically mean someone can receive a patient's private medical information.</p>";
+    }
+
+    document.getElementById("legalScore").innerHTML = legalScore;
+    document.getElementById("ethicsScore").innerHTML = ethicsScore;
+    document.getElementById("patientScore").innerHTML = patientScore;
 }
 
     </script>
