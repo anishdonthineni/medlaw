@@ -6,25 +6,39 @@
 
 <body>
 
+    <!-- HOME SCREEN -->
     <div id="home">
+
         <h1>MEDLAW</h1>
+
         <h2>Medical Law & Ethics</h2>
+
         <p>Learn. Decide. Understand.</p>
 
         <button onclick="startGame()">START</button>
+
     </div>
 
 
+    <!-- GAME SCREEN -->
     <div id="game" style="display: none;">
 
+        <!-- SCORE -->
         <div id="score">
+
             <p>⚖️ Legal: <span id="legalScore">0</span></p>
+
             <p>🧠 Ethics: <span id="ethicsScore">0</span></p>
+
             <p>❤️ Patient Care: <span id="patientScore">0</span></p>
+
         </div>
+
 
         <h1>CASE 001</h1>
 
+
+        <!-- QUESTIONS -->
         <div id="questionArea">
 
             <h2>Patient Autonomy</h2>
@@ -42,11 +56,13 @@
 
             <h3>What should happen?</h3>
 
+
             <button onclick="chooseAnswer('A')">
                 A. Proceed with the treatment anyway.
             </button>
 
             <br><br>
+
 
             <button onclick="chooseAnswer('B')">
                 B. Respect the patient's decision after confirming
@@ -55,11 +71,13 @@
 
             <br><br>
 
+
             <button onclick="chooseAnswer('C')">
                 C. Ask the patient's family to make the decision.
             </button>
 
             <br><br>
+
 
             <button onclick="chooseAnswer('D')">
                 D. Delay the decision until the patient agrees.
@@ -68,8 +86,11 @@
         </div>
 
 
+        <!-- FEEDBACK -->
         <div id="result"></div>
 
+
+        <!-- NEXT BUTTON -->
         <button id="nextButton" onclick="nextQuestion()" style="display: none;">
             NEXT
         </button>
@@ -79,10 +100,20 @@
 
     <script>
 
+        // =========================
+        // SCORES
+        // =========================
+
         let legalScore = 0;
+
         let ethicsScore = 0;
+
         let patientScore = 0;
 
+
+        // =========================
+        // START GAME
+        // =========================
 
         function startGame() {
 
@@ -93,42 +124,9 @@
         }
 
 
-        function chooseAnswer(answer) {
-
-            if (answer === "B") {
-
-                legalScore += 10;
-                ethicsScore += 10;
-                patientScore += 10;
-
-                document.getElementById("result").innerHTML =
-                    "<h3>Good decision.</h3>" +
-                    "<p>You respected the patient's autonomy and their right to make an informed decision.</p>" +
-                    "<p>⚖️ Legal: +10</p>" +
-                    "<p>🧠 Ethics: +10</p>" +
-                    "<p>❤️ Patient Care: +10</p>";
-
-            } else {
-
-                legalScore += 3;
-                ethicsScore += 2;
-                patientScore += 1;
-
-                document.getElementById("result").innerHTML =
-                    "<h3>Think about this decision.</h3>" +
-                    "<p>This choice raises concerns about the patient's autonomy.</p>" +
-                    "<p>⚖️ Legal: +3</p>" +
-                    "<p>🧠 Ethics: +2</p>" +
-                    "<p>❤️ Patient Care: +1</p>";
-            }
-
-
-            updateScore();
-
-            document.getElementById("nextButton").style.display = "block";
-
-        }
-
+        // =========================
+        // UPDATE SCORE
+        // =========================
 
         function updateScore() {
 
@@ -141,27 +139,102 @@
         }
 
 
+        // =========================
+        // DECISION 1
+        // =========================
+
+        function chooseAnswer(answer) {
+
+            if (answer === "B") {
+
+                legalScore += 10;
+
+                ethicsScore += 10;
+
+                patientScore += 10;
+
+
+                document.getElementById("result").innerHTML =
+
+                    "<h3>Good decision.</h3>" +
+
+                    "<p>You respected the patient's autonomy and their right to make an informed decision.</p>" +
+
+                    "<p>⚖️ Legal: +10</p>" +
+
+                    "<p>🧠 Ethics: +10</p>" +
+
+                    "<p>❤️ Patient Care: +10</p>";
+
+            }
+
+            else {
+
+                legalScore += 3;
+
+                ethicsScore += 2;
+
+                patientScore += 1;
+
+
+                document.getElementById("result").innerHTML =
+
+                    "<h3>Think about this decision.</h3>" +
+
+                    "<p>This choice raises concerns about the patient's autonomy.</p>" +
+
+                    "<p>⚖️ Legal: +3</p>" +
+
+                    "<p>🧠 Ethics: +2</p>" +
+
+                    "<p>❤️ Patient Care: +1</p>";
+
+            }
+
+
+            updateScore();
+
+
+            document.getElementById("nextButton").style.display = "block";
+
+        }
+
+
+        // =========================
+        // MOVE TO DECISION 2
+        // =========================
+
         function nextQuestion() {
 
             document.getElementById("questionArea").innerHTML =
 
-                "<h2>Decision 2</h2>" +
+                "<h2>Decision 2 — Confidentiality</h2>" +
 
                 "<p>A family member approaches you and asks for information about the patient's condition.</p>" +
 
                 "<h3>What should you do?</h3>" +
 
+
                 "<button onclick=\"chooseSecondAnswer('A')\">" +
+
                 "A. Give them all the information they request." +
+
                 "</button><br><br>" +
+
 
                 "<button onclick=\"chooseSecondAnswer('B')\">" +
+
                 "B. Consider whether the patient has authorized sharing their information." +
+
                 "</button><br><br>" +
 
+
                 "<button onclick=\"chooseSecondAnswer('C')\">" +
+
                 "C. Tell them everything because they are family." +
+
                 "</button>";
+
 
             document.getElementById("result").innerHTML = "";
 
@@ -170,13 +243,20 @@
         }
 
 
+        // =========================
+        // DECISION 2
+        // =========================
+
         function chooseSecondAnswer(answer) {
 
             if (answer === "B") {
 
                 legalScore += 10;
+
                 ethicsScore += 10;
+
                 patientScore += 10;
+
 
                 document.getElementById("result").innerHTML =
 
@@ -190,11 +270,16 @@
 
                     "<p>❤️ Patient Care: +10</p>";
 
-            } else {
+            }
+
+            else {
 
                 legalScore += 2;
+
                 ethicsScore += 2;
+
                 patientScore += 1;
+
 
                 document.getElementById("result").innerHTML =
 
@@ -207,10 +292,212 @@
                     "<p>🧠 Ethics: +2</p>" +
 
                     "<p>❤️ Patient Care: +1</p>";
+
             }
 
 
             updateScore();
+
+
+            document.getElementById("nextButton").innerHTML = "NEXT";
+
+            document.getElementById("nextButton").onclick = nextQuestion3;
+
+            document.getElementById("nextButton").style.display = "block";
+
+        }
+
+
+        // =========================
+        // MOVE TO DECISION 3
+        // =========================
+
+        function nextQuestion3() {
+
+            document.getElementById("questionArea").innerHTML =
+
+                "<h2>Decision 3 — Professional Responsibility</h2>" +
+
+                "<p>The patient has clearly stated that they do not want the recommended treatment. The doctor asks you to document the patient's decision.</p>" +
+
+                "<h3>What should you do?</h3>" +
+
+
+                "<button onclick=\"chooseThirdAnswer('A')\">" +
+
+                "A. Accurately document the patient's decision and the information they were given." +
+
+                "</button><br><br>" +
+
+
+                "<button onclick=\"chooseThirdAnswer('B')\">" +
+
+                "B. Leave out the refusal because it could make the doctor look bad." +
+
+                "</button><br><br>" +
+
+
+                "<button onclick=\"chooseThirdAnswer('C')\">" +
+
+                "C. Change the documentation so it appears the patient agreed." +
+
+                "</button>";
+
+            document.getElementById("result").innerHTML = "";
+
+            document.getElementById("nextButton").style.display = "none";
+
+        }
+
+
+        // =========================
+        // DECISION 3
+        // =========================
+
+        function chooseThirdAnswer(answer) {
+
+            if (answer === "A") {
+
+                legalScore += 10;
+
+                ethicsScore += 10;
+
+                patientScore += 10;
+
+
+                document.getElementById("result").innerHTML =
+
+                    "<h3>Excellent decision.</h3>" +
+
+                    "<p>Accurate documentation is an important part of professional responsibility and patient care.</p>" +
+
+                    "<p>⚖️ Legal: +10</p>" +
+
+                    "<p>🧠 Ethics: +10</p>" +
+
+                    "<p>❤️ Patient Care: +10</p>";
+
+            }
+
+            else {
+
+                legalScore += 1;
+
+                ethicsScore += 1;
+
+                patientScore += 1;
+
+
+                document.getElementById("result").innerHTML =
+
+                    "<h3>Think carefully about documentation.</h3>" +
+
+                    "<p>Medical records should accurately reflect important decisions and information.</p>" +
+
+                    "<p>⚖️ Legal: +1</p>" +
+
+                    "<p>🧠 Ethics: +1</p>" +
+
+                    "<p>❤️ Patient Care: +1</p>";
+
+            }
+
+
+            updateScore();
+
+
+            document.getElementById("nextButton").innerHTML = "SEE RESULTS";
+
+            document.getElementById("nextButton").onclick = showResults;
+
+            document.getElementById("nextButton").style.display = "block";
+
+        }
+
+
+        // =========================
+        // FINAL RESULTS
+        // =========================
+
+        function showResults() {
+
+            document.getElementById("questionArea").innerHTML =
+
+                "<h1>CASE COMPLETE</h1>" +
+
+                "<h2>Your Results</h2>" +
+
+                "<p>You completed Case 001: Patient Autonomy.</p>" +
+
+
+                "<h3>⚖️ Legal Judgment</h3>" +
+
+                "<p>" + legalScore + " / 30</p>" +
+
+
+                "<h3>🧠 Ethical Reasoning</h3>" +
+
+                "<p>" + ethicsScore + " / 30</p>" +
+
+
+                "<h3>❤️ Patient Care</h3>" +
+
+                "<p>" + patientScore + " / 30</p>";
+
+
+            document.getElementById("result").innerHTML =
+
+                "<h3>Case Summary</h3>" +
+
+                "<p>This case explored patient autonomy, confidentiality, informed decision-making, and professional responsibility.</p>";
+
+
+            document.getElementById("nextButton").innerHTML = "PLAY AGAIN";
+
+            document.getElementById("nextButton").onclick = restartGame;
+
+        }
+
+
+        // =========================
+        // PLAY AGAIN
+        // =========================
+
+        function restartGame() {
+
+            legalScore = 0;
+
+            ethicsScore = 0;
+
+            patientScore = 0;
+
+
+            updateScore();
+
+
+            document.getElementById("questionArea").innerHTML =
+
+                "<h2>Patient Autonomy</h2>" +
+
+                "<p>You are working with a patient who has been diagnosed with a serious medical condition. Their doctor recommends a treatment that has a high chance of helping.</p>" +
+
+                "<p>The patient understands the risks and benefits but refuses the treatment.</p>" +
+
+                "<h3>What should happen?</h3>" +
+
+
+                "<button onclick=\"chooseAnswer('A')\">A. Proceed with the treatment anyway.</button><br><br>" +
+
+                "<button onclick=\"chooseAnswer('B')\">B. Respect the patient's decision after confirming they understand the risks and benefits.</button><br><br>" +
+
+                "<button onclick=\"chooseAnswer('C')\">C. Ask the patient's family to make the decision.</button><br><br>" +
+
+                "<button onclick=\"chooseAnswer('D')\">D. Delay the decision until the patient agrees.</button>";
+
+
+            document.getElementById("result").innerHTML = "";
+
+            document.getElementById("nextButton").style.display = "none";
 
         }
 
