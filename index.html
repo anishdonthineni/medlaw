@@ -38,7 +38,7 @@
         <h1>CASE 001</h1>
 
 
-        <!-- QUESTIONS -->
+        <!-- QUESTION AREA -->
         <div id="questionArea">
 
             <h2>Patient Autonomy</h2>
@@ -57,14 +57,14 @@
             <h3>What should happen?</h3>
 
 
-            <button onclick="chooseAnswer('A')">
+            <button onclick="chooseAnswer('A', this)">
                 A. Proceed with the treatment anyway.
             </button>
 
             <br><br>
 
 
-            <button onclick="chooseAnswer('B')">
+            <button onclick="chooseAnswer('B', this)">
                 B. Respect the patient's decision after confirming
                 they understand the risks and benefits.
             </button>
@@ -72,14 +72,14 @@
             <br><br>
 
 
-            <button onclick="chooseAnswer('C')">
+            <button onclick="chooseAnswer('C', this)">
                 C. Ask the patient's family to make the decision.
             </button>
 
             <br><br>
 
 
-            <button onclick="chooseAnswer('D')">
+            <button onclick="chooseAnswer('D', this)">
                 D. Delay the decision until the patient agrees.
             </button>
 
@@ -117,6 +117,12 @@
 
         function startGame() {
 
+            legalScore = 0;
+            ethicsScore = 0;
+            patientScore = 0;
+
+            updateScore();
+
             document.getElementById("home").style.display = "none";
 
             document.getElementById("game").style.display = "block";
@@ -140,10 +146,32 @@
 
 
         // =========================
+        // DISABLE ANSWERS
+        // =========================
+
+        function disableAnswers() {
+
+            let buttons = document.querySelectorAll("#questionArea button");
+
+            buttons.forEach(function(button) {
+
+                button.disabled = true;
+
+            });
+
+        }
+
+
+        // =========================
         // DECISION 1
         // =========================
 
-        function chooseAnswer(answer) {
+        function chooseAnswer(answer, buttonClicked) {
+
+            disableAnswers();
+
+            buttonClicked.disabled = true;
+
 
             if (answer === "B") {
 
@@ -195,13 +223,17 @@
             updateScore();
 
 
+            document.getElementById("nextButton").innerHTML = "NEXT";
+
+            document.getElementById("nextButton").onclick = nextQuestion;
+
             document.getElementById("nextButton").style.display = "block";
 
         }
 
 
         // =========================
-        // MOVE TO DECISION 2
+        // DECISION 2
         // =========================
 
         function nextQuestion() {
@@ -215,21 +247,21 @@
                 "<h3>What should you do?</h3>" +
 
 
-                "<button onclick=\"chooseSecondAnswer('A')\">" +
+                "<button onclick=\"chooseSecondAnswer('A', this)\">" +
 
                 "A. Give them all the information they request." +
 
                 "</button><br><br>" +
 
 
-                "<button onclick=\"chooseSecondAnswer('B')\">" +
+                "<button onclick=\"chooseSecondAnswer('B', this)\">" +
 
                 "B. Consider whether the patient has authorized sharing their information." +
 
                 "</button><br><br>" +
 
 
-                "<button onclick=\"chooseSecondAnswer('C')\">" +
+                "<button onclick=\"chooseSecondAnswer('C', this)\">" +
 
                 "C. Tell them everything because they are family." +
 
@@ -244,10 +276,13 @@
 
 
         // =========================
-        // DECISION 2
+        // DECISION 2 ANSWER
         // =========================
 
-        function chooseSecondAnswer(answer) {
+        function chooseSecondAnswer(answer, buttonClicked) {
+
+            disableAnswers();
+
 
             if (answer === "B") {
 
@@ -309,7 +344,7 @@
 
 
         // =========================
-        // MOVE TO DECISION 3
+        // DECISION 3
         // =========================
 
         function nextQuestion3() {
@@ -323,25 +358,26 @@
                 "<h3>What should you do?</h3>" +
 
 
-                "<button onclick=\"chooseThirdAnswer('A')\">" +
+                "<button onclick=\"chooseThirdAnswer('A', this)\">" +
 
                 "A. Accurately document the patient's decision and the information they were given." +
 
                 "</button><br><br>" +
 
 
-                "<button onclick=\"chooseThirdAnswer('B')\">" +
+                "<button onclick=\"chooseThirdAnswer('B', this)\">" +
 
                 "B. Leave out the refusal because it could make the doctor look bad." +
 
                 "</button><br><br>" +
 
 
-                "<button onclick=\"chooseThirdAnswer('C')\">" +
+                "<button onclick=\"chooseThirdAnswer('C', this)\">" +
 
                 "C. Change the documentation so it appears the patient agreed." +
 
                 "</button>";
+
 
             document.getElementById("result").innerHTML = "";
 
@@ -351,10 +387,13 @@
 
 
         // =========================
-        // DECISION 3
+        // DECISION 3 ANSWER
         // =========================
 
-        function chooseThirdAnswer(answer) {
+        function chooseThirdAnswer(answer, buttonClicked) {
+
+            disableAnswers();
+
 
             if (answer === "A") {
 
@@ -429,16 +468,13 @@
 
                 "<p>You completed Case 001: Patient Autonomy.</p>" +
 
-
                 "<h3>⚖️ Legal Judgment</h3>" +
 
                 "<p>" + legalScore + " / 30</p>" +
 
-
                 "<h3>🧠 Ethical Reasoning</h3>" +
 
                 "<p>" + ethicsScore + " / 30</p>" +
-
 
                 "<h3>❤️ Patient Care</h3>" +
 
@@ -471,7 +507,6 @@
 
             patientScore = 0;
 
-
             updateScore();
 
 
@@ -485,17 +520,20 @@
 
                 "<h3>What should happen?</h3>" +
 
+                "<button onclick=\"chooseAnswer('A', this)\">A. Proceed with the treatment anyway.</button><br><br>" +
 
-                "<button onclick=\"chooseAnswer('A')\">A. Proceed with the treatment anyway.</button><br><br>" +
+                "<button onclick=\"chooseAnswer('B', this)\">B. Respect the patient's decision after confirming they understand the risks and benefits.</button><br><br>" +
 
-                "<button onclick=\"chooseAnswer('B')\">B. Respect the patient's decision after confirming they understand the risks and benefits.</button><br><br>" +
+                "<button onclick=\"chooseAnswer('C', this)\">C. Ask the patient's family to make the decision.</button><br><br>" +
 
-                "<button onclick=\"chooseAnswer('C')\">C. Ask the patient's family to make the decision.</button><br><br>" +
-
-                "<button onclick=\"chooseAnswer('D')\">D. Delay the decision until the patient agrees.</button>";
+                "<button onclick=\"chooseAnswer('D', this)\">D. Delay the decision until the patient agrees.</button>";
 
 
             document.getElementById("result").innerHTML = "";
+
+            document.getElementById("nextButton").innerHTML = "NEXT";
+
+            document.getElementById("nextButton").onclick = nextQuestion;
 
             document.getElementById("nextButton").style.display = "none";
 
