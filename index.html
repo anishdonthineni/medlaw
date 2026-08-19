@@ -6,7 +6,10 @@
 
 <body>
 
-    <!-- HOME SCREEN -->
+    <!-- =========================
+         HOME SCREEN
+    ========================== -->
+
     <div id="home">
 
         <h1>MEDLAW</h1>
@@ -20,10 +23,63 @@
     </div>
 
 
-    <!-- GAME SCREEN -->
+    <!-- =========================
+         CASE SELECTION
+    ========================== -->
+
+    <div id="caseSelect" style="display: none;">
+
+        <h1>SELECT A CASE</h1>
+
+        <button onclick="selectCase(0)">
+            CASE 001 — Patient Autonomy
+        </button>
+
+        <br><br>
+
+        <button onclick="selectCase(1)">
+            CASE 002 — Confidentiality & Privacy
+        </button>
+
+        <br><br>
+
+        <button onclick="selectCase(2)">
+            CASE 003 — Informed Consent
+        </button>
+
+        <br><br>
+
+        <button onclick="selectCase(3)">
+            CASE 004 — Medical Malpractice
+        </button>
+
+        <br><br>
+
+        <button onclick="selectCase(4)">
+            CASE 005 — Minors & Healthcare
+        </button>
+
+        <br><br>
+
+        <button onclick="selectCase(5)">
+            CASE 006 — Research Ethics
+        </button>
+
+        <br><br>
+
+        <button onclick="selectCase(6)">
+            CASE 007 — End-of-Life Decisions
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         GAME SCREEN
+    ========================== -->
+
     <div id="game" style="display: none;">
 
-        <!-- SCORE -->
         <div id="score">
 
             <p>⚖️ Legal: <span id="legalScore">0</span></p>
@@ -35,62 +91,17 @@
         </div>
 
 
-        <h1>CASE 001</h1>
+        <h1 id="caseTitle"></h1>
+
+        <p id="questionNumber"></p>
 
 
-        <!-- QUESTION AREA -->
-        <div id="questionArea">
-
-            <h2>Patient Autonomy</h2>
-
-            <p>
-                You are working with a patient who has been diagnosed
-                with a serious medical condition. Their doctor recommends
-                a treatment that has a high chance of helping.
-            </p>
-
-            <p>
-                The patient understands the risks and benefits but
-                refuses the treatment.
-            </p>
-
-            <h3>What should happen?</h3>
+        <div id="questionArea"></div>
 
 
-            <button onclick="chooseAnswer('A', this)">
-                A. Proceed with the treatment anyway.
-            </button>
-
-            <br><br>
-
-
-            <button onclick="chooseAnswer('B', this)">
-                B. Respect the patient's decision after confirming
-                they understand the risks and benefits.
-            </button>
-
-            <br><br>
-
-
-            <button onclick="chooseAnswer('C', this)">
-                C. Ask the patient's family to make the decision.
-            </button>
-
-            <br><br>
-
-
-            <button onclick="chooseAnswer('D', this)">
-                D. Delay the decision until the patient agrees.
-            </button>
-
-        </div>
-
-
-        <!-- FEEDBACK -->
         <div id="result"></div>
 
 
-        <!-- NEXT BUTTON -->
         <button id="nextButton" onclick="nextQuestion()" style="display: none;">
             NEXT
         </button>
@@ -100,9 +111,891 @@
 
     <script>
 
-        // =========================
-        // SCORES
-        // =========================
+        // ==================================================
+        // CASE DATA
+        // ==================================================
+
+        const cases = [
+
+            // ==================================================
+            // CASE 001
+            // ==================================================
+
+            {
+                title: "CASE 001 — Patient Autonomy",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "You are working with a patient who has been diagnosed with a serious medical condition. Their doctor recommends a treatment that has a high chance of helping. The patient understands the risks and benefits but refuses the treatment. What should happen?",
+
+                        choices: [
+
+                            {
+                                text: "Proceed with the treatment anyway.",
+                                legal: 3,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "A competent patient generally has the right to make informed decisions about their own healthcare."
+                            },
+
+                            {
+                                text: "Respect the patient's decision after confirming they understand the risks and benefits.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. This respects patient autonomy and informed decision-making."
+                            },
+
+                            {
+                                text: "Ask the patient's family to make the decision.",
+                                legal: 3,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "Family involvement can be valuable, but it does not automatically replace the patient's own decision."
+                            },
+
+                            {
+                                text: "Delay the decision until the patient agrees.",
+                                legal: 3,
+                                ethics: 3,
+                                patient: 2,
+                                feedback:
+                                    "A patient who understands the situation does not necessarily need to agree with the recommended treatment."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "A family member approaches you and asks for information about the patient's condition. What should you do?",
+
+                        choices: [
+
+                            {
+                                text: "Give them all the information they request.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "Patient information should not automatically be shared simply because someone is a family member."
+                            },
+
+                            {
+                                text: "Consider whether the patient has authorized sharing their information.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Protecting confidentiality is an important part of patient trust."
+                            },
+
+                            {
+                                text: "Tell them everything because they are family.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "Being related to a patient does not automatically give someone access to private medical information."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "The patient has clearly stated that they do not want the recommended treatment. The healthcare provider asks you to document the patient's decision. What should you do?",
+
+                        choices: [
+
+                            {
+                                text: "Accurately document the patient's decision and the information they were given.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent decision. Accurate documentation supports patient care and professional responsibility."
+                            },
+
+                            {
+                                text: "Leave out the refusal because it could make the provider look bad.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Medical documentation should accurately reflect important decisions and information."
+                            },
+
+                            {
+                                text: "Change the documentation so it appears the patient agreed.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Changing a medical record to create a false impression is inappropriate."
+                            }
+
+                        ]
+                    }
+
+                ]
+            },
+
+
+            // ==================================================
+            // CASE 002
+            // ==================================================
+
+            {
+                title: "CASE 002 — Confidentiality & Privacy",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "You work at a medical office. A patient's friend calls and asks whether the patient was recently seen at the office. What should you do?",
+
+                        choices: [
+
+                            {
+                                text: "Confirm the appointment because they say they are a close friend.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "A person's relationship with the patient does not automatically give them access to private information."
+                            },
+
+                            {
+                                text: "Avoid confirming private information unless disclosure is authorized or otherwise permitted.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Protecting confidentiality begins with not unnecessarily confirming private information."
+                            },
+
+                            {
+                                text: "Give them the information if they promise not to tell anyone.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "A promise of confidentiality from the caller does not automatically authorize disclosure."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "Later, the patient asks why their information was not given to the caller. How should you respond?",
+
+                        choices: [
+
+                            {
+                                text: "Explain that protecting patient privacy is an important responsibility.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Explaining privacy practices can help maintain trust between patients and healthcare professionals."
+                            },
+
+                            {
+                                text: "Tell the patient that privacy rules only matter for strangers.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Privacy responsibilities are not limited to strangers."
+                            },
+
+                            {
+                                text: "Tell the patient that you shared the information anyway.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Unnecessary disclosure can undermine confidentiality and patient trust."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "The patient now wants their information shared with a specific person. What is the best next step?",
+
+                        choices: [
+
+                            {
+                                text: "Share everything immediately without checking the authorization process.",
+                                legal: 3,
+                                ethics: 3,
+                                patient: 2,
+                                feedback:
+                                    "Even when a patient wants information shared, appropriate authorization and procedures should be followed."
+                            },
+
+                            {
+                                text: "Follow the appropriate process for documenting or confirming the patient's authorization.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent. Patient-directed disclosure should still follow the appropriate procedures."
+                            },
+
+                            {
+                                text: "Refuse to ever share the information.",
+                                legal: 3,
+                                ethics: 3,
+                                patient: 3,
+                                feedback:
+                                    "Patients may be able to authorize appropriate disclosure of their information."
+                            }
+
+                        ]
+                    }
+
+                ]
+            },
+
+
+            // ==================================================
+            // CASE 003
+            // ==================================================
+
+            {
+                title: "CASE 003 — Informed Consent",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "A patient is scheduled for a procedure. The healthcare provider explains what will happen but does not discuss an important potential risk. What is the main concern?",
+
+                        choices: [
+
+                            {
+                                text: "There is no concern as long as the procedure is successful.",
+                                legal: 2,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Patients generally need meaningful information about relevant risks and alternatives when making healthcare decisions."
+                            },
+
+                            {
+                                text: "The patient may not have received enough information to make a properly informed decision.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Informed consent involves meaningful information that allows a patient to make an informed choice."
+                            },
+
+                            {
+                                text: "Only the patient's family needs to understand the risk.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "The patient is generally the person whose informed decision is at issue when they have decision-making capacity."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "The patient asks about alternatives to the recommended procedure. What should happen?",
+
+                        choices: [
+
+                            {
+                                text: "The provider should discuss relevant alternatives when appropriate.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Understanding reasonable alternatives can be important to informed decision-making."
+                            },
+
+                            {
+                                text: "The patient does not need to know about alternatives.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "Patients may need information about reasonable alternatives to make an informed decision."
+                            },
+
+                            {
+                                text: "Only the most expensive option should be discussed.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Cost alone should not determine what information a patient receives about their options."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "After receiving the information, the patient decides not to have the procedure. What should the healthcare team do?",
+
+                        choices: [
+
+                            {
+                                text: "Respect the decision after confirming the patient understands the relevant information.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent. Informed decision-making includes the ability to decline a proposed treatment."
+                            },
+
+                            {
+                                text: "Proceed because the provider believes the procedure is best.",
+                                legal: 2,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "A provider's recommendation does not automatically override a competent patient's informed decision."
+                            },
+
+                            {
+                                text: "Ask a friend to convince the patient.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "The focus should remain on informed, voluntary decision-making rather than pressure."
+                            }
+
+                        ]
+                    }
+
+                ]
+            },
+
+
+            // ==================================================
+            // CASE 004
+            // ==================================================
+
+            {
+                title: "CASE 004 — Medical Malpractice",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "A patient is injured after receiving medical treatment. The patient believes the healthcare professional should automatically be considered negligent. What should be considered?",
+
+                        choices: [
+
+                            {
+                                text: "Any bad outcome automatically proves malpractice.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "A bad outcome alone does not automatically establish negligence or malpractice."
+                            },
+
+                            {
+                                text: "The circumstances, applicable standard of care, and other legal elements must be evaluated.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Medical malpractice questions generally require analysis of the relevant legal elements and circumstances."
+                            },
+
+                            {
+                                text: "The healthcare professional is always responsible for every outcome.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "Healthcare outcomes can occur despite appropriate care."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "You discover that an important event was not documented in the patient's medical record. What should you do?",
+
+                        choices: [
+
+                            {
+                                text: "Invent details so the record looks complete.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Medical records should not contain fabricated information."
+                            },
+
+                            {
+                                text: "Follow proper documentation procedures and accurately record information that can be supported.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Accurate records are important for continuity of care and professional accountability."
+                            },
+
+                            {
+                                text: "Delete other information to make room for the new information.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Medical records should be handled according to appropriate documentation procedures."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "A colleague asks you to ignore a possible error because reporting it might cause problems for the team. What should you consider?",
+
+                        choices: [
+
+                            {
+                                text: "Patient safety and appropriate professional reporting responsibilities.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent. Patient safety and professional responsibility should be taken seriously when an error or safety concern occurs."
+                            },
+
+                            {
+                                text: "Protecting the team's reputation is always more important.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Protecting a team's reputation should not come before patient safety."
+                            },
+
+                            {
+                                text: "Ignore it unless someone else notices.",
+                                legal: 2,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Ignoring a potential safety concern can allow problems to continue."
+                            }
+
+                        ]
+                    }
+
+                ]
+            },
+
+
+            // ==================================================
+            // CASE 005
+            // ==================================================
+
+            {
+                title: "CASE 005 — Minors & Healthcare",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "A minor arrives at a healthcare facility with a parent. Before providing care, what should the healthcare team consider?",
+
+                        choices: [
+
+                            {
+                                text: "Nothing about consent matters because the patient is a minor.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Consent and decision-making rules still matter when treating minors."
+                            },
+
+                            {
+                                text: "Who has legal authority to consent and what laws apply to the specific situation.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Rules involving minors can depend on the type of care and the law in the relevant jurisdiction."
+                            },
+
+                            {
+                                text: "Always let the minor make every medical decision alone.",
+                                legal: 2,
+                                ethics: 3,
+                                patient: 3,
+                                feedback:
+                                    "The decision-making rules for minors are more complicated than simply allowing or denying independent decision-making."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "The minor asks the healthcare professional a question directly. What should the professional do?",
+
+                        choices: [
+
+                            {
+                                text: "Ignore the minor and speak only to the parent.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "Minors should generally be treated with respect and included in communication appropriate to their age and circumstances."
+                            },
+
+                            {
+                                text: "Communicate respectfully with both the minor and the parent as appropriate.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Respectful communication can help the young patient understand and participate appropriately in their care."
+                            },
+
+                            {
+                                text: "Tell the minor that their questions do not matter.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Patients deserve respectful communication, including young patients."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "The minor asks whether everything they say will always remain private. What should the healthcare professional do?",
+
+                        choices: [
+
+                            {
+                                text: "Promise that absolutely nothing can ever be disclosed.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "Privacy rules involving minors can have important exceptions, so an absolute promise may be inappropriate."
+                            },
+
+                            {
+                                text: "Explain privacy and its limits honestly, based on the applicable rules and situation.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent. Minors should receive an age-appropriate explanation of privacy and its limits."
+                            },
+
+                            {
+                                text: "Tell them privacy does not exist for minors.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "Privacy and confidentiality can still be important in care involving minors."
+                            }
+
+                        ]
+                    }
+
+                ]
+            },
+
+
+            // ==================================================
+            // CASE 006
+            // ==================================================
+
+            {
+                title: "CASE 006 — Research Ethics",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "A research team wants people to participate in a medical study. What is an important first consideration?",
+
+                        choices: [
+
+                            {
+                                text: "Recruit as many people as possible without explaining the study.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Participants need meaningful information before deciding whether to participate."
+                            },
+
+                            {
+                                text: "Make sure potential participants receive appropriate information about the study and its risks.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Respect for research participants requires meaningful information and informed participation."
+                            },
+
+                            {
+                                text: "Only explain the benefits because risks could discourage participation.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Participants should not be misled by leaving out important risks or other relevant information."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "A researcher discovers that a study procedure may create an unexpected risk for participants. What should the research team do?",
+
+                        choices: [
+
+                            {
+                                text: "Hide the information so the study can continue.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Potential risks should not simply be hidden from those responsible for protecting research participants."
+                            },
+
+                            {
+                                text: "Follow the study's safety and oversight procedures and address the new risk appropriately.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Research safety requires appropriate response to newly identified risks."
+                            },
+
+                            {
+                                text: "Continue without telling anyone unless someone gets hurt.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Waiting for harm to occur is not an appropriate approach to a newly identified research risk."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "A participant decides they no longer want to participate in the study. What should the research team consider?",
+
+                        choices: [
+
+                            {
+                                text: "The participant should generally be able to leave according to the study's rules and applicable requirements.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent. Voluntary participation is a fundamental principle of ethical human-subject research."
+                            },
+
+                            {
+                                text: "The participant must stay because they already started.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Participation should not simply become mandatory because someone has already enrolled."
+                            },
+
+                            {
+                                text: "Threaten the participant with punishment for leaving.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Coercion undermines voluntary participation."
+                            }
+
+                        ]
+                    }
+
+                ]
+            },
+
+
+            // ==================================================
+            // CASE 007
+            // ==================================================
+
+            {
+                title: "CASE 007 — End-of-Life Decisions",
+
+                questions: [
+
+                    {
+                        prompt:
+                            "A seriously ill patient has previously documented their wishes about future medical care. The patient can no longer communicate. What should the healthcare team consider?",
+
+                        choices: [
+
+                            {
+                                text: "Ignore the patient's previous wishes because they cannot speak now.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "A patient's previously expressed wishes can be important when making decisions about their care."
+                            },
+
+                            {
+                                text: "Review the patient's documented wishes and follow applicable laws and clinical procedures.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Advance planning can help communicate a patient's preferences when they cannot speak for themselves."
+                            },
+
+                            {
+                                text: "Automatically choose whichever treatment the family prefers.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 2,
+                                feedback:
+                                    "Family perspectives can matter, but decisions should also consider the patient's wishes and applicable rules."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "Family members disagree about what the patient would have wanted. What should the healthcare team do?",
+
+                        choices: [
+
+                            {
+                                text: "Choose whichever family member is the loudest.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "The loudest opinion is not necessarily the patient's preference."
+                            },
+
+                            {
+                                text: "Review available documentation, communicate respectfully, and follow applicable decision-making procedures.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Good decision. Care decisions should be based on reliable information and appropriate procedures."
+                            },
+
+                            {
+                                text: "Ignore all documentation and make a random choice.",
+                                legal: 1,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Important healthcare decisions should not be made randomly."
+                            }
+
+                        ]
+                    },
+
+
+                    {
+                        prompt:
+                            "The healthcare team needs to discuss the patient's goals of care with the family. What should guide the discussion?",
+
+                        choices: [
+
+                            {
+                                text: "The patient's known wishes, values, applicable rules, and appropriate clinical considerations.",
+                                legal: 10,
+                                ethics: 10,
+                                patient: 10,
+                                feedback:
+                                    "Excellent. End-of-life discussions should focus on the patient's preferences and appropriate legal and clinical considerations."
+                            },
+
+                            {
+                                text: "What would be easiest for the healthcare team.",
+                                legal: 2,
+                                ethics: 1,
+                                patient: 1,
+                                feedback:
+                                    "Convenience for the healthcare team should not replace consideration of the patient's goals and rights."
+                            },
+
+                            {
+                                text: "Whatever decision costs the least.",
+                                legal: 2,
+                                ethics: 2,
+                                patient: 1,
+                                feedback:
+                                    "Cost alone should not determine an individual patient's end-of-life care."
+                            }
+
+                        ]
+                    }
+
+                ]
+            }
+
+        ];
+
+
+        // ==================================================
+        // GAME VARIABLES
+        // ==================================================
+
+        let currentCase = 0;
+
+        let currentQuestion = 0;
 
         let legalScore = 0;
 
@@ -111,28 +1004,49 @@
         let patientScore = 0;
 
 
-        // =========================
-        // START GAME
-        // =========================
+        // ==================================================
+        // START
+        // ==================================================
 
         function startGame() {
 
-            legalScore = 0;
-            ethicsScore = 0;
-            patientScore = 0;
-
-            updateScore();
-
             document.getElementById("home").style.display = "none";
 
-            document.getElementById("game").style.display = "block";
+            document.getElementById("caseSelect").style.display = "block";
 
         }
 
 
-        // =========================
+        // ==================================================
+        // SELECT CASE
+        // ==================================================
+
+        function selectCase(caseNumber) {
+
+            currentCase = caseNumber;
+
+            currentQuestion = 0;
+
+            legalScore = 0;
+
+            ethicsScore = 0;
+
+            patientScore = 0;
+
+            updateScore();
+
+            document.getElementById("caseSelect").style.display = "none";
+
+            document.getElementById("game").style.display = "block";
+
+            loadQuestion();
+
+        }
+
+
+        // ==================================================
         // UPDATE SCORE
-        // =========================
+        // ==================================================
 
         function updateScore() {
 
@@ -145,13 +1059,77 @@
         }
 
 
-        // =========================
-        // DISABLE ANSWERS
-        // =========================
+        // ==================================================
+        // LOAD QUESTION
+        // ==================================================
 
-        function disableAnswers() {
+        function loadQuestion() {
 
-            let buttons = document.querySelectorAll("#questionArea button");
+            const caseData = cases[currentCase];
+
+            const question = caseData.questions[currentQuestion];
+
+
+            document.getElementById("caseTitle").innerHTML =
+                caseData.title;
+
+
+            document.getElementById("questionNumber").innerHTML =
+                "Decision " + (currentQuestion + 1) + " of 3";
+
+
+            let html =
+
+                "<h2>" +
+                question.prompt +
+                "</h2>";
+
+
+            question.choices.forEach(function(choice, index) {
+
+                html +=
+
+                    "<button onclick=\"chooseAnswer(" +
+                    index +
+                    ", this)\">" +
+
+                    choice.text +
+
+                    "</button>" +
+
+                    "<br><br>";
+
+            });
+
+
+            document.getElementById("questionArea").innerHTML = html;
+
+
+            document.getElementById("result").innerHTML = "";
+
+            document.getElementById("nextButton").style.display = "none";
+
+        }
+
+
+        // ==================================================
+        // ANSWER
+        // ==================================================
+
+        function chooseAnswer(choiceIndex, buttonClicked) {
+
+            const question =
+                cases[currentCase].questions[currentQuestion];
+
+            const choice =
+                question.choices[choiceIndex];
+
+
+            // Disable every answer button
+
+            const buttons =
+                document.querySelectorAll("#questionArea button");
+
 
             buttons.forEach(function(button) {
 
@@ -159,306 +1137,92 @@
 
             });
 
-        }
 
+            // Add scores
 
-        // =========================
-        // DECISION 1
-        // =========================
+            legalScore += choice.legal;
 
-        function chooseAnswer(answer, buttonClicked) {
+            ethicsScore += choice.ethics;
 
-            disableAnswers();
-
-            buttonClicked.disabled = true;
-
-
-            if (answer === "B") {
-
-                legalScore += 10;
-
-                ethicsScore += 10;
-
-                patientScore += 10;
-
-
-                document.getElementById("result").innerHTML =
-
-                    "<h3>Good decision.</h3>" +
-
-                    "<p>You respected the patient's autonomy and their right to make an informed decision.</p>" +
-
-                    "<p>⚖️ Legal: +10</p>" +
-
-                    "<p>🧠 Ethics: +10</p>" +
-
-                    "<p>❤️ Patient Care: +10</p>";
-
-            }
-
-            else {
-
-                legalScore += 3;
-
-                ethicsScore += 2;
-
-                patientScore += 1;
-
-
-                document.getElementById("result").innerHTML =
-
-                    "<h3>Think about this decision.</h3>" +
-
-                    "<p>This choice raises concerns about the patient's autonomy.</p>" +
-
-                    "<p>⚖️ Legal: +3</p>" +
-
-                    "<p>🧠 Ethics: +2</p>" +
-
-                    "<p>❤️ Patient Care: +1</p>";
-
-            }
+            patientScore += choice.patient;
 
 
             updateScore();
 
 
-            document.getElementById("nextButton").innerHTML = "NEXT";
+            // Show feedback
 
-            document.getElementById("nextButton").onclick = nextQuestion;
+            document.getElementById("result").innerHTML =
 
-            document.getElementById("nextButton").style.display = "block";
+                "<h3>Feedback</h3>" +
+
+                "<p>" +
+                choice.feedback +
+                "</p>" +
+
+                "<p>⚖️ Legal: +" +
+                choice.legal +
+                "</p>" +
+
+                "<p>🧠 Ethics: +" +
+                choice.ethics +
+                "</p>" +
+
+                "<p>❤️ Patient Care: +" +
+                choice.patient +
+                "</p>";
+
+
+            // Change NEXT button
+
+            if (currentQuestion < 2) {
+
+                document.getElementById("nextButton").innerHTML =
+                    "NEXT";
+
+                document.getElementById("nextButton").onclick =
+                    nextQuestion;
+
+            }
+
+            else {
+
+                document.getElementById("nextButton").innerHTML =
+                    "SEE RESULTS";
+
+                document.getElementById("nextButton").onclick =
+                    showResults;
+
+            }
+
+
+            document.getElementById("nextButton").style.display =
+                "block";
 
         }
 
 
-        // =========================
-        // DECISION 2
-        // =========================
+        // ==================================================
+        // NEXT QUESTION
+        // ==================================================
 
         function nextQuestion() {
 
-            document.getElementById("questionArea").innerHTML =
+            currentQuestion++;
 
-                "<h2>Decision 2 — Confidentiality</h2>" +
-
-                "<p>A family member approaches you and asks for information about the patient's condition.</p>" +
-
-                "<h3>What should you do?</h3>" +
-
-
-                "<button onclick=\"chooseSecondAnswer('A', this)\">" +
-
-                "A. Give them all the information they request." +
-
-                "</button><br><br>" +
-
-
-                "<button onclick=\"chooseSecondAnswer('B', this)\">" +
-
-                "B. Consider whether the patient has authorized sharing their information." +
-
-                "</button><br><br>" +
-
-
-                "<button onclick=\"chooseSecondAnswer('C', this)\">" +
-
-                "C. Tell them everything because they are family." +
-
-                "</button>";
-
-
-            document.getElementById("result").innerHTML = "";
-
-            document.getElementById("nextButton").style.display = "none";
+            loadQuestion();
 
         }
 
 
-        // =========================
-        // DECISION 2 ANSWER
-        // =========================
-
-        function chooseSecondAnswer(answer, buttonClicked) {
-
-            disableAnswers();
-
-
-            if (answer === "B") {
-
-                legalScore += 10;
-
-                ethicsScore += 10;
-
-                patientScore += 10;
-
-
-                document.getElementById("result").innerHTML =
-
-                    "<h3>Good decision.</h3>" +
-
-                    "<p>Patient confidentiality is an important part of healthcare.</p>" +
-
-                    "<p>⚖️ Legal: +10</p>" +
-
-                    "<p>🧠 Ethics: +10</p>" +
-
-                    "<p>❤️ Patient Care: +10</p>";
-
-            }
-
-            else {
-
-                legalScore += 2;
-
-                ethicsScore += 2;
-
-                patientScore += 1;
-
-
-                document.getElementById("result").innerHTML =
-
-                    "<h3>Consider confidentiality.</h3>" +
-
-                    "<p>Being a family member does not automatically mean someone can receive a patient's private medical information.</p>" +
-
-                    "<p>⚖️ Legal: +2</p>" +
-
-                    "<p>🧠 Ethics: +2</p>" +
-
-                    "<p>❤️ Patient Care: +1</p>";
-
-            }
-
-
-            updateScore();
-
-
-            document.getElementById("nextButton").innerHTML = "NEXT";
-
-            document.getElementById("nextButton").onclick = nextQuestion3;
-
-            document.getElementById("nextButton").style.display = "block";
-
-        }
-
-
-        // =========================
-        // DECISION 3
-        // =========================
-
-        function nextQuestion3() {
-
-            document.getElementById("questionArea").innerHTML =
-
-                "<h2>Decision 3 — Professional Responsibility</h2>" +
-
-                "<p>The patient has clearly stated that they do not want the recommended treatment. The doctor asks you to document the patient's decision.</p>" +
-
-                "<h3>What should you do?</h3>" +
-
-
-                "<button onclick=\"chooseThirdAnswer('A', this)\">" +
-
-                "A. Accurately document the patient's decision and the information they were given." +
-
-                "</button><br><br>" +
-
-
-                "<button onclick=\"chooseThirdAnswer('B', this)\">" +
-
-                "B. Leave out the refusal because it could make the doctor look bad." +
-
-                "</button><br><br>" +
-
-
-                "<button onclick=\"chooseThirdAnswer('C', this)\">" +
-
-                "C. Change the documentation so it appears the patient agreed." +
-
-                "</button>";
-
-
-            document.getElementById("result").innerHTML = "";
-
-            document.getElementById("nextButton").style.display = "none";
-
-        }
-
-
-        // =========================
-        // DECISION 3 ANSWER
-        // =========================
-
-        function chooseThirdAnswer(answer, buttonClicked) {
-
-            disableAnswers();
-
-
-            if (answer === "A") {
-
-                legalScore += 10;
-
-                ethicsScore += 10;
-
-                patientScore += 10;
-
-
-                document.getElementById("result").innerHTML =
-
-                    "<h3>Excellent decision.</h3>" +
-
-                    "<p>Accurate documentation is an important part of professional responsibility and patient care.</p>" +
-
-                    "<p>⚖️ Legal: +10</p>" +
-
-                    "<p>🧠 Ethics: +10</p>" +
-
-                    "<p>❤️ Patient Care: +10</p>";
-
-            }
-
-            else {
-
-                legalScore += 1;
-
-                ethicsScore += 1;
-
-                patientScore += 1;
-
-
-                document.getElementById("result").innerHTML =
-
-                    "<h3>Think carefully about documentation.</h3>" +
-
-                    "<p>Medical records should accurately reflect important decisions and information.</p>" +
-
-                    "<p>⚖️ Legal: +1</p>" +
-
-                    "<p>🧠 Ethics: +1</p>" +
-
-                    "<p>❤️ Patient Care: +1</p>";
-
-            }
-
-
-            updateScore();
-
-
-            document.getElementById("nextButton").innerHTML = "SEE RESULTS";
-
-            document.getElementById("nextButton").onclick = showResults;
-
-            document.getElementById("nextButton").style.display = "block";
-
-        }
-
-
-        // =========================
-        // FINAL RESULTS
-        // =========================
+        // ==================================================
+        // RESULTS
+        // ==================================================
 
         function showResults() {
+
+            const caseData = cases[currentCase];
+
 
             document.getElementById("questionArea").innerHTML =
 
@@ -466,76 +1230,55 @@
 
                 "<h2>Your Results</h2>" +
 
-                "<p>You completed Case 001: Patient Autonomy.</p>" +
+                "<p>" +
+                caseData.title +
+                "</p>" +
 
                 "<h3>⚖️ Legal Judgment</h3>" +
 
-                "<p>" + legalScore + " / 30</p>" +
+                "<p>" +
+                legalScore +
+                " / 30</p>" +
 
                 "<h3>🧠 Ethical Reasoning</h3>" +
 
-                "<p>" + ethicsScore + " / 30</p>" +
+                "<p>" +
+                ethicsScore +
+                " / 30</p>" +
 
                 "<h3>❤️ Patient Care</h3>" +
 
-                "<p>" + patientScore + " / 30</p>";
+                "<p>" +
+                patientScore +
+                " / 30</p>";
 
 
             document.getElementById("result").innerHTML =
 
-                "<h3>Case Summary</h3>" +
+                "<h3>Case Complete</h3>" +
 
-                "<p>This case explored patient autonomy, confidentiality, informed decision-making, and professional responsibility.</p>";
+                "<p>You completed all three decisions.</p>";
 
 
-            document.getElementById("nextButton").innerHTML = "PLAY AGAIN";
+            document.getElementById("nextButton").innerHTML =
+                "BACK TO CASES";
 
-            document.getElementById("nextButton").onclick = restartGame;
+
+            document.getElementById("nextButton").onclick =
+                backToCases;
 
         }
 
 
-        // =========================
-        // PLAY AGAIN
-        // =========================
+        // ==================================================
+        // BACK TO CASE SELECTION
+        // ==================================================
 
-        function restartGame() {
+        function backToCases() {
 
-            legalScore = 0;
+            document.getElementById("game").style.display = "none";
 
-            ethicsScore = 0;
-
-            patientScore = 0;
-
-            updateScore();
-
-
-            document.getElementById("questionArea").innerHTML =
-
-                "<h2>Patient Autonomy</h2>" +
-
-                "<p>You are working with a patient who has been diagnosed with a serious medical condition. Their doctor recommends a treatment that has a high chance of helping.</p>" +
-
-                "<p>The patient understands the risks and benefits but refuses the treatment.</p>" +
-
-                "<h3>What should happen?</h3>" +
-
-                "<button onclick=\"chooseAnswer('A', this)\">A. Proceed with the treatment anyway.</button><br><br>" +
-
-                "<button onclick=\"chooseAnswer('B', this)\">B. Respect the patient's decision after confirming they understand the risks and benefits.</button><br><br>" +
-
-                "<button onclick=\"chooseAnswer('C', this)\">C. Ask the patient's family to make the decision.</button><br><br>" +
-
-                "<button onclick=\"chooseAnswer('D', this)\">D. Delay the decision until the patient agrees.</button>";
-
-
-            document.getElementById("result").innerHTML = "";
-
-            document.getElementById("nextButton").innerHTML = "NEXT";
-
-            document.getElementById("nextButton").onclick = nextQuestion;
-
-            document.getElementById("nextButton").style.display = "none";
+            document.getElementById("caseSelect").style.display = "block";
 
         }
 
